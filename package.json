@@ -1,0 +1,33 @@
+{
+  "name": "node-cors-proxy-server",
+  "version": "1.0.0",
+  "description": "A CORS proxy that support proxies.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TODO"
+  },
+  "keywords": [
+    "cors",
+    "proxied",
+    "proxy",
+    "server"
+  ],
+  "author": "Sébastien Vercammen",
+  "license": "MIT",
+  "bugs": {
+    "url": "TODO"
+  },
+  "homepage": "https://www.devkat.org",
+  "devDependencies": {},
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "request": "^2.81.0",
+    "restify": "^4.3.0",
+    "restify-router": "^0.4.2",
+    "toobusy-js": "^0.5.1"
+  }
+}
