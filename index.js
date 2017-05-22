@@ -3,16 +3,28 @@ require('dotenv').config();
 
 // Requirements.
 const toobusy = require('toobusy-js');
-const server = require('./modules/server');
+const servers = require('./modules/server');
 
 // Settings.
 const WEB_PORT = parseInt(process.env.WEB_PORT) || 8080;
+const WEB_SSL_PORT = parseInt(process.env.WEB_SSL_PORT) || 8081;
 const WEB_HOST = process.env.WEB_HOST || '0.0.0.0';
 
+const ENABLE_HTTPS = (process.env.ENABLE_HTTPS === 'true');
+
+const HTTP_SERVER = servers.http;
+const HTTPS_SERVER = servers.https;
+
 // Start.
-server.listen(WEB_PORT, WEB_HOST, function () {
-    console.log('%s listening at %s.', server.name, server.url);
+HTTP_SERVER.listen(WEB_PORT, WEB_HOST, function () {
+    console.log('%s listening for HTTP at %s.', server.name, server.url);
 });
+
+if (ENABLE_HTTPS) {
+    HTTPS_SERVER.listen(WEB_SSL_PORT, WEB_HOST, function () {
+        console.log('%s listening for HTTPS at %s.', server.name, server.url);
+    });
+}
 
 process.on('SIGINT', function () {
     server.close();
