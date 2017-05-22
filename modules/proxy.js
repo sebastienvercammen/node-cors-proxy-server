@@ -47,9 +47,6 @@ if (ENABLE_PROXIES) {
 function get(req, res, next) {
     // Enable CORS.
     res.header('Access-Control-Allow-Origin', '*');
-    
-    // No delay.
-    res.setNoDelay(true);
 
     var url = req.url.substr(1);
     var using_https = (url.indexOf('https:') !== -1);

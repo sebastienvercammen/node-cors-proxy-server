@@ -61,7 +61,7 @@ function setup_server(server) {
     server.use(restify.queryParser({
         mapParams: false
     }));
-    
+
     server.use(function (req, res, next) {
         if (toobusy()) {
             res.send(503, 'Server is busy! Please try again later.');
@@ -69,15 +69,21 @@ function setup_server(server) {
             next();
         }
     });
-    
+
     // CORS.
     server.opts('/', proxy.opts);
-    
+
     // Request handlers.
     server.get(/^\/(https?:\/\/.+)/, throttleTierOne, proxy.get);
     // NOT READY:
     // server.post(/^\/(http:\/\/.+)/, throttleTierOne, proxy.post);
     // server.put(/^\/(http:\/\/.+)/, throttleTierOne, proxy.put);
+
+    // Remove socket delay.
+    server.on('connection', function (socket) {
+        console.log('server.on.connection - setNoDelay');
+        socket.setNoDelay(true);
+    });
 }
 
 // Set up both HTTP and HTTPS.
