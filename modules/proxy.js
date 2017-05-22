@@ -34,18 +34,32 @@ const serverHeadersBlacklist = new Set([
 
 
 // Application.
-var proxies;
+var proxies = [];
 
 if (ENABLE_PROXIES) {
-    let http_proxies = [];
-    let https_proxies = [];
+    if (fs.existsSync(HTTP_PROXY_LIST_PATH)) {
+        let http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
+        
+        for (var i = 0; i < http_proxies.length; i++) {
+            let proxy = http_proxies[i];
+            
+            if (proxy.length > 0)
+                proxies.push(http_proxies[i]);
+        }
+    }
     
-    if (fs.existsSync(HTTP_PROXY_LIST_PATH))
-        http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
-    if (fs.existsSync(HTTPS_PROXY_LIST_PATH))
-        https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+    if (fs.existsSync(HTTPS_PROXY_LIST_PATH)) {
+        let https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
+        
+        for (var i = 0; i < https_proxies.length; i++) {
+            let proxy = https_proxies[i];
+            
+            if (proxy.length > 0)
+                proxies.push(https_proxies[i]);
+        }
+    }
 
-    proxies = new CircularList(http_proxies.concat(https_proxies));
+    proxies = new CircularList(proxies);
 }
 
 
