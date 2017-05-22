@@ -27,7 +27,8 @@ if (ENABLE_HTTPS) {
 }
 
 process.on('SIGINT', function () {
-    server.close();
+    HTTP_SERVER.close();
+    if (ENABLE_HTTPS) HTTPS_SERVER.close();
     // Calling .shutdown allows your process to exit normally.
     toobusy.shutdown();
     process.exit();
