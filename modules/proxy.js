@@ -47,6 +47,9 @@ if (ENABLE_PROXIES) {
 function get(req, res, next) {
     // Enable CORS.
     res.header('Access-Control-Allow-Origin', '*');
+    
+    // No delay.
+    res.setNoDelay(true);
 
     var url = req.url.substr(1);
     var using_https = (url.indexOf('https:') !== -1);
@@ -129,6 +132,13 @@ function get(req, res, next) {
 
             // Must flush here, otherwise pipe() will include the headers!
             res.flushHeaders();
+        }).on('data', function (chunk) {
+            data += chunk.length;
+
+            if (data > RESPONSE_SIZE_LIMIT) {
+                //return res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
+                return res.abort();
+            }
         }).on('error', function (err) {
             console.log(err);
             return res.abort();
