@@ -28,6 +28,7 @@ const clientHeadersBlacklist = new Set([
 const serverHeadersBlacklist = new Set([
     'set-cookie',
     'connection',
+    'content-length'
 ]);
 
 
@@ -131,7 +132,7 @@ function get(req, res, next) {
             data += chunk.length;
 
             if (data > RESPONSE_SIZE_LIMIT) {
-                res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
+                //res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
                 return res.abort();
             }
         }).on('end', function () {
