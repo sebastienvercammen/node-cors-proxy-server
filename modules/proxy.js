@@ -32,12 +32,12 @@ const serverHeadersBlacklist = new Set([
 
 
 // Application.
-var http_proxies;
-var https_proxies;
+var proxies;
 
 if (ENABLE_PROXIES) {
-    http_proxies = new CircularList(fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/));
-    https_proxies = new CircularList(fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/));
+    let http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+    let https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+    proxies = new CircularList(http_proxies.concat(https_proxies));
 }
 
 
@@ -89,14 +89,7 @@ function get(req, res, next) {
 
     // Using a proxy?
     if (ENABLE_PROXIES) {
-        let proxy = '';
-
-        if (using_https) {
-            proxy = https_proxies.getNext();
-        } else {
-            proxy = http_proxies.getNext();
-        }
-
+        let proxy = proxies.getNext();
         request_options.proxy = proxy;
     }
 
