@@ -138,8 +138,15 @@ function get(req, res, next) {
             }
         }).on('error', function (err) {
             console.log(err);
+            return res.abort();
         }).on('end', function () {
+            console.log('Request to %s has ended.', url)
+            return res.end(); // End the response when the stream ends.
+        }).on('close', function () {
             console.log('Request to %s has closed.', url)
+            return res.end(); // End the response when the stream ends.
+        }).on('complete', function () {
+            console.log('Request to %s has completed.', url)
             return res.end(); // End the response when the stream ends.
         }).pipe(res); // Stream requested url to response.
 }
