@@ -38,10 +38,13 @@ function get(req, res, next) {
         return res.send(403, 'Disallowed URL.');
     }
 
-    // require Origin header
+    // Require Origin header.
     if (!requireHeader.some(header => req.headers[header])) {
         return res.send(403, 'Header "origin" is required.');
     }
+    
+    // Log.
+    console.log('Received proxy request to: %s.', url);
 
     // TODO: Redirect same origin.
 
