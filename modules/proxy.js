@@ -1,6 +1,7 @@
 // Process environment settings.
 require('dotenv').config();
 
+const fs = require('fs');
 const request = require('request');
 const CircularList = require('easy-circular-list');
 
