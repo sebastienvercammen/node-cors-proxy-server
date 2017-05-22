@@ -1,6 +1,14 @@
+// Process environment settings.
+require('dotenv').config();
+
 const request = require('request');
+const CircularList = require('easy-circular-list');
 
 // Settings.
+const ENABLE_PROXIES = (process.env.ENABLE_PROXIES === 'true');
+const HTTP_PROXY_LIST_PATH = process.env.HTTP_PROXY_LIST_PATH || 'http_proxies.txt';
+const HTTPS_PROXY_LIST_PATH = process.env.HTTPS_PROXY_LIST_PATH || 'https_proxies.txt';
+
 const RESPONSE_SIZE_LIMIT = parseInt(process.env.RESPONSE_SIZE_LIMIT) || 2097152;
 
 const blockedPhrases = [
@@ -23,6 +31,15 @@ const serverHeadersBlacklist = new Set([
 ]);
 
 
+// Application.
+var http_proxies;
+var https_proxies;
+
+if (ENABLE_PROXIES) {
+    http_proxies = new CircularList(fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/));
+    https_proxies = new CircularList(fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/));
+}
+
 
 /*
  * Handle GET requests.
@@ -32,6 +49,7 @@ function get(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
 
     var url = req.url.substr(1);
+    var using_https = (url.indexOf('https:') !== -1);
 
     // Disallow blocked phrases.
     if (url.match(blockedPhrases)) {
@@ -62,12 +80,29 @@ function get(req, res, next) {
 
     // File size limiter.
     var data_size = 0;
+    
+    // Request options.
+    var request_options = {
+        'url': url,
+        'headers': headers
+    };
+    
+    // Using a proxy?
+    if (ENABLE_PROXIES) {
+        let proxy = '';
+        
+        if (using_https) {
+            proxy = https_proxies.getNext();
+        } else {
+            proxy = http_proxies.getNext();
+        }
+        
+        request_options.proxy = proxy;
+    }
 
     // Send request.
     request
-        .get(url, {
-            headers
-        })
+        .get(request_options)
         .on('response', function (page) {
             // Check content length.
             if (Number(page.headers['content-length']) > RESPONSE_SIZE_LIMIT) {
@@ -96,14 +131,15 @@ function get(req, res, next) {
             data += chunk.length;
 
             if (data > RESPONSE_SIZE_LIMIT) {
-                res.abort(); // Kills response and request cleanly.
+                res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
+                return res.abort();
             }
         }).on('end', function () {
-            res.end(); // End the response when the stream ends
-        }).pipe(res); // Stream requested url to response;
+            return res.end(); // End the response when the stream ends.
+        }).pipe(res); // Stream requested url to response.
 
     // Routing.
-    next();
+    return next();
 }
 
 /*
