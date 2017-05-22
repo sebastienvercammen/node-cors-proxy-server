@@ -137,9 +137,6 @@ function get(req, res, next) {
         }).on('end', function () {
             return res.end(); // End the response when the stream ends.
         }).pipe(res); // Stream requested url to response.
-
-    // Routing.
-    return next();
 }
 
 /*
