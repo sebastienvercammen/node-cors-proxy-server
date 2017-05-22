@@ -28,7 +28,8 @@ const clientHeadersBlacklist = new Set([
 ]);
 const serverHeadersBlacklist = new Set([
     'set-cookie',
-    'connection'
+    'connection',
+    'access-control-allow-origin'
 ]);
 
 
@@ -123,7 +124,7 @@ function get(req, res, next) {
 
             // Remove blacklisted headers.
             for (var header in page.headers) {
-                if (!serverHeadersBlacklist.has(header)) {
+                if (!serverHeadersBlacklist.has(header.toLowerCase())) {
                     res.header(header, page.headers[header]);
                 }
             }
