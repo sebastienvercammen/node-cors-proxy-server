@@ -97,6 +97,7 @@ function get(req, res, next) {
     // Using a proxy?
     if (ENABLE_PROXIES) {
         let proxy = proxies.getNext();
+        console.log('Using proxy %s for request...', proxy);
         request_options.proxy = proxy;
     }
 
