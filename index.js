@@ -17,12 +17,12 @@ const HTTPS_SERVER = servers.https;
 
 // Start.
 HTTP_SERVER.listen(WEB_PORT, WEB_HOST, function () {
-    console.log('%s listening for HTTP at %s.', server.name, server.url);
+    console.log('%s listening for HTTP at %s.', HTTP_SERVER.name, HTTP_SERVER.url);
 });
 
 if (ENABLE_HTTPS) {
     HTTPS_SERVER.listen(WEB_SSL_PORT, WEB_HOST, function () {
-        console.log('%s listening for HTTPS at %s.', server.name, server.url);
+        console.log('%s listening for HTTPS at %s.', HTTPS_SERVER.name, HTTPS_SERVER.url);
     });
 }
 
