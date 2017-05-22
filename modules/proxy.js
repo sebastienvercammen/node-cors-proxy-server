@@ -136,6 +136,7 @@ function get(req, res, next) {
                 return res.abort();
             }
         }).on('end', function () {
+            console.log('Request to %s has closed.', url)
             return res.end(); // End the response when the stream ends.
         }).pipe(res); // Stream requested url to response.
 }
