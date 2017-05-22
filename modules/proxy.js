@@ -129,24 +129,11 @@ function get(req, res, next) {
 
             // Must flush here, otherwise pipe() will include the headers!
             res.flushHeaders();
-        }).on('data', function (chunk) {
-            data += chunk.length;
-
-            if (data > RESPONSE_SIZE_LIMIT) {
-                //res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
-                return res.abort();
-            }
         }).on('error', function (err) {
             console.log(err);
             return res.abort();
         }).on('end', function () {
             console.log('Request to %s has ended.', url)
-            return res.end(); // End the response when the stream ends.
-        }).on('close', function () {
-            console.log('Request to %s has closed.', url)
-            return res.end(); // End the response when the stream ends.
-        }).on('complete', function () {
-            console.log('Request to %s has completed.', url)
             return res.end(); // End the response when the stream ends.
         }).pipe(res); // Stream requested url to response.
 }
