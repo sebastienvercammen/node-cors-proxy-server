@@ -36,8 +36,14 @@ const serverHeadersBlacklist = new Set([
 var proxies;
 
 if (ENABLE_PROXIES) {
-    let http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
-    let https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+    let http_proxies = [];
+    let https_proxies = [];
+    
+    if (fs.existsSync(HTTP_PROXY_LIST_PATH))
+        http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+    if (fs.existsSync(HTTPS_PROXY_LIST_PATH))
+        https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/);
+
     proxies = new CircularList(http_proxies.concat(https_proxies));
 }
 
