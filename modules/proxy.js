@@ -27,8 +27,7 @@ const clientHeadersBlacklist = new Set([
 ]);
 const serverHeadersBlacklist = new Set([
     'set-cookie',
-    'connection',
-    'content-length'
+    'connection'
 ]);
 
 
@@ -61,7 +60,7 @@ function get(req, res, next) {
     if (!requireHeader.some(header => req.headers[header])) {
         return res.send(403, 'Header "origin" is required.');
     }
-    
+
     // Log.
     console.log('Received proxy request to: %s.', url);
 
@@ -81,23 +80,23 @@ function get(req, res, next) {
 
     // File size limiter.
     var data_size = 0;
-    
+
     // Request options.
     var request_options = {
         'url': url,
         'headers': headers
     };
-    
+
     // Using a proxy?
     if (ENABLE_PROXIES) {
         let proxy = '';
-        
+
         if (using_https) {
             proxy = https_proxies.getNext();
         } else {
             proxy = http_proxies.getNext();
         }
-        
+
         request_options.proxy = proxy;
     }
 
@@ -112,6 +111,8 @@ function get(req, res, next) {
 
             // Reply w/ proper status code.
             res.statusCode = page.statusCode;
+
+            console.log('Received %s as response code.', page.statusCode)
 
             // If the page already supports cors, redirect to the URL.
             // TODO: Is this the optimal way of doing this?
@@ -135,6 +136,8 @@ function get(req, res, next) {
                 //res.send(413, 'Maximum allowed size is ' + RESPONSE_SIZE_LIMIT + ' bytes.');
                 return res.abort();
             }
+        }).on('error', function (err) {
+            console.log(err);
         }).on('end', function () {
             console.log('Request to %s has closed.', url)
             return res.end(); // End the response when the stream ends.
