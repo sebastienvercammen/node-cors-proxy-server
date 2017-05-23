@@ -6,6 +6,7 @@ const request = require('request');
 const CircularList = require('easy-circular-list');
 
 // Settings.
+const DEBUG = (process.env.DEBUG === 'true') || false;
 const ENABLE_PROXIES = (process.env.ENABLE_PROXIES === 'true') || false;
 const PROXY_LIST_PATH = process.env.PROXY_LIST_PATH || 'proxies.txt';
 
@@ -38,10 +39,10 @@ var proxies = [];
 if (ENABLE_PROXIES) {
     if (fs.existsSync(PROXY_LIST_PATH)) {
         let proxy_list = fs.readFileSync(PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
-        
+
         for (var i = 0; i < proxy_list.length; i++) {
             let proxy = proxy_list[i].strip();
-            
+
             if (proxy.length > 0)
                 proxies.push(proxy_list[i]);
         }
@@ -74,7 +75,8 @@ function get(req, res, next) {
     }
 
     // Log.
-    console.log('Received proxy request to: %s.', url);
+    if (DEBUG)
+        console.log('Received proxy request to: %s.', url);
 
     // TODO: Redirect same origin.
 
@@ -102,7 +104,10 @@ function get(req, res, next) {
     // Using a proxy?
     if (ENABLE_PROXIES) {
         let proxy = proxies.getNext();
-        console.log('Using proxy %s for request...', proxy);
+
+        if (DEBUG)
+            console.log('Using proxy %s for request...', proxy);
+
         request_options.proxy = proxy;
     }
 
@@ -118,7 +123,8 @@ function get(req, res, next) {
             // Reply w/ proper status code.
             res.statusCode = page.statusCode;
 
-            console.log('Received %s as response code.', page.statusCode)
+            if (DEBUG)
+                console.log('Received %s as response code.', page.statusCode)
 
             // If the page already supports cors, redirect to the URL.
             // TODO: Is this the optimal way of doing this?
@@ -139,7 +145,9 @@ function get(req, res, next) {
             console.log(err);
             return res.abort();
         }).on('end', function () {
-            console.log('Request to %s has ended.', url)
+            if (DEBUG)
+                console.log('Request to %s has ended.', url)
+
             return res.end(); // End the response when the stream ends.
         }).pipe(res); // Stream requested url to response.
 }

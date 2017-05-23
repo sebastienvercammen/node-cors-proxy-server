@@ -61,7 +61,7 @@ function setup_server(server) {
     server.use(restify.queryParser({
         mapParams: false
     }));
-    
+
     server.use(function (req, res, next) {
         if (toobusy()) {
             res.send(503, 'Server is busy! Please try again later.');
@@ -69,10 +69,10 @@ function setup_server(server) {
             next();
         }
     });
-    
+
     // CORS.
     server.opts('/', proxy.opts);
-    
+
     // Request handlers.
     server.get(/^\/(https?:\/\/.+)/, throttleTierOne, proxy.get);
     // NOT READY:
