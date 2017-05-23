@@ -24,8 +24,8 @@ const HTTP_OPTIONS = {
     name: SERVER_NAME
 };
 const HTTPS_OPTIONS = {
-    key: fs.readFileSync(SSL_KEY_PATH),
-    certificate: fs.readFileSync(SSL_CERT_PATH),
+    key: (ENABLE_HTTPS) ? fs.readFileSync(SSL_KEY_PATH) : '',
+    certificate: (ENABLE_HTTPS) ? fs.readFileSync(SSL_CERT_PATH) : '',
     name: SERVER_NAME
 };
 
