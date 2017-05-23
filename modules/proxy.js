@@ -41,7 +41,7 @@ if (ENABLE_PROXIES) {
         let proxy_list = fs.readFileSync(PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
 
         for (var i = 0; i < proxy_list.length; i++) {
-            let proxy = proxy_list[i].strip();
+            let proxy = proxy_list[i].trim();
 
             if (proxy.length > 0)
                 proxies.push(proxy_list[i]);
