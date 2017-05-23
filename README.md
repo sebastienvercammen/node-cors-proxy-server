@@ -10,8 +10,8 @@ These instructions will help you deploy the project on a live system.
 
 ### Prerequisites
 
-* [Node.js v6.10.3 or higher](https://nodejs.org/en/)
-* npm v4.6.0 or higher
+- [Node.js v6.10.3 or higher](https://nodejs.org/en/)
+- npm v4.6.0 or higher
 
 ```
 To update npm:
@@ -25,6 +25,12 @@ Make sure node.js and npm are properly installed:
 ```
 node -v
 npm -v
+```
+
+Clone the project:
+
+```
+git clone http://USERNAME@gitlab.sebastienvercammen.be/devkat/node-cors-proxy-server.git
 ```
 
 Make sure you are in the project directory with your terminal, and install the dependencies:
@@ -46,6 +52,7 @@ copy .env.example .env
 And presto, you're ready to configure.
 
 After configuring, start the server with:
+
 ```
 node index.js
 ```
@@ -53,6 +60,7 @@ node index.js
 ### Configuration
 
 #### Settings you must review
+
 ```
 # Enable or disable verbose console logging:
 DEBUG=true
@@ -65,13 +73,16 @@ WEB_PORT=8080
 ```
 
 #### Enabling proxies
+
 ```
 ENABLE_PROXIES=true
 PROXY_LIST_PATH=/my/proxy/path/proxies.txt
 ```
+
 The proxy list should be formatted as one proxy per line, in a complete format (e.g. `http://user:pass@host.com`).
 
 #### Enabling the HTTPS webserver
+
 ```
 ENABLE_HTTPS=true
 
@@ -83,4 +94,4 @@ SSL_CERT_PATH=/etc/ssl/self-signed/server.crt
 
 ## License
 
-This project is licensed under a custom license - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under a custom license - see the <LICENSE.md> file for details.
