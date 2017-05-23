@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TODO"
+    "url": "git+http://gitlab.sebastienvercammen.be/devkat/node-cors-proxy-server"
   },
   "keywords": [
     "cors",
@@ -17,10 +17,7 @@
     "server"
   ],
   "author": "Sébastien Vercammen",
-  "license": "MIT",
-  "bugs": {
-    "url": "TODO"
-  },
+  "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://www.devkat.org",
   "devDependencies": {},
   "dependencies": {
