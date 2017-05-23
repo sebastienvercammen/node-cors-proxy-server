@@ -6,9 +6,8 @@ const request = require('request');
 const CircularList = require('easy-circular-list');
 
 // Settings.
-const ENABLE_PROXIES = (process.env.ENABLE_PROXIES === 'true');
-const HTTP_PROXY_LIST_PATH = process.env.HTTP_PROXY_LIST_PATH || 'http_proxies.txt';
-const HTTPS_PROXY_LIST_PATH = process.env.HTTPS_PROXY_LIST_PATH || 'https_proxies.txt';
+const ENABLE_PROXIES = (process.env.ENABLE_PROXIES === 'true') || false;
+const PROXY_LIST_PATH = process.env.PROXY_LIST_PATH || 'proxies.txt';
 
 const RESPONSE_SIZE_LIMIT = parseInt(process.env.RESPONSE_SIZE_LIMIT) || 2097152;
 
@@ -37,26 +36,17 @@ const serverHeadersBlacklist = new Set([
 var proxies = [];
 
 if (ENABLE_PROXIES) {
-    if (fs.existsSync(HTTP_PROXY_LIST_PATH)) {
-        let http_proxies = fs.readFileSync(HTTP_PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
+    if (fs.existsSync(PROXY_LIST_PATH)) {
+        let proxy_list = fs.readFileSync(PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
         
-        for (var i = 0; i < http_proxies.length; i++) {
-            let proxy = http_proxies[i];
+        for (var i = 0; i < proxy_list.length; i++) {
+            let proxy = proxy_list[i].strip();
             
             if (proxy.length > 0)
-                proxies.push(http_proxies[i]);
+                proxies.push(proxy_list[i]);
         }
-    }
-    
-    if (fs.existsSync(HTTPS_PROXY_LIST_PATH)) {
-        let https_proxies = fs.readFileSync(HTTPS_PROXY_LIST_PATH, 'utf8').split(/\r?\n/)
-        
-        for (var i = 0; i < https_proxies.length; i++) {
-            let proxy = https_proxies[i];
-            
-            if (proxy.length > 0)
-                proxies.push(https_proxies[i]);
-        }
+    } else {
+        throw Error('Proxies are enabled, but proxy path does not exist: ' + PROXY_LIST_PATH + '.');
     }
 
     proxies = new CircularList(proxies);
