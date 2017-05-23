@@ -45,6 +45,11 @@ copy .env.example .env
 
 And presto, you're ready to configure.
 
+After configuring, start the server with:
+```
+node index.js
+```
+
 ### Configuration
 
 #### Settings you must review
