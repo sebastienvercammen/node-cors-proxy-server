@@ -44,8 +44,8 @@ toobusy.onLag(function (currentLag) {
 
 // Throttling tiers.
 const throttleTierOne = restify.throttle({
-    rate: 3,
-    burst: 10,
+    rate: 50,
+    burst: 100,
     ip: THROTTLE_ON_IP,
     xff: THROTTLE_ON_XFF,
     overrides: {
