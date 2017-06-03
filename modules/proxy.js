@@ -121,7 +121,7 @@ function get(req, res, next) {
         } else {
             // Yay, we have a proxy!
             if (DEBUG) {
-                console.log('Using proxy %s for request...', proxy);
+                console.log('Using proxy %s for request...', proxy['url']);
             }
 
             sendRequest(req, res, proxy);
