@@ -124,7 +124,7 @@ function get(req, res, next) {
                 console.log('Using proxy %s for request...', proxy['proxy']);
             }
 
-            sendRequest(req, res, url, proxy);
+            sendRequest(req, res, url, headers, proxy);
         }
     } else {
         // No proxy.
@@ -132,7 +132,7 @@ function get(req, res, next) {
 
         // Below the rate limit or it's the last request.
         if (num_calls <= REQS_TILL_RATE_LIMIT) {
-            return sendRequest(req, res, url);
+            return sendRequest(req, res, headers, url);
         }
 
         // Whoops, rate limit.
@@ -199,7 +199,7 @@ function findBestProxy(proxies) {
 
 // Send request.
 // Fields in a proxy item: 'proxy', 'uses', 'available_at'.
-function sendRequest(req, res, url, proxy) {
+function sendRequest(req, res, url, headers, proxy) {
     // Update timer.
     last_request = Date.now();
 
