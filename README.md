@@ -30,7 +30,7 @@ npm -v
 Clone the project:
 
 ```
-git clone http://USERNAME@gitlab.sebastienvercammen.be/devkat/node-cors-proxy-server.git
+git clone https://github.com/sebastienvercammen/node-cors-proxy-server.git
 ```
 
 Make sure you are in the project directory with your terminal, and install the dependencies:
