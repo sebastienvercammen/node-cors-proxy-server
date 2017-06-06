@@ -94,4 +94,4 @@ SSL_CERT_PATH=/etc/ssl/self-signed/server.crt
 
 ## License
 
-This project is licensed under a custom license - see the <LICENSE.md> file for details.
+This project is licensed under the AGPLv3 license - see the <LICENSE> file for details.
